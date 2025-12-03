@@ -15,14 +15,14 @@ with open('setup_libs.py', 'r', encoding='utf-8') as f:
 # Now try to import
 print("\nAttempting to import setup_libs...")
 try:
-    import setup_libs
-    print("✓ setup_libs imported successfully")
+    import earthquake as setup_libs
+    print("✓ earthquake (setup) imported successfully")
     print(f"  Module file: {setup_libs.__file__}")
     print(f"  Module dict keys: {sorted([x for x in dir(setup_libs) if not x.startswith('_')])}")
     
     # Check if availability exists
     if hasattr(setup_libs, 'availability'):
-        print("✓ setup_libs.availability exists")
+        print("✓ earthquake.availability exists")
         result = setup_libs.availability()
         print(f"  Result: {result}")
     else:

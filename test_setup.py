@@ -1,6 +1,6 @@
-import setup_libs as libs
+import earthquake as libs
 
-print('✓ setup_libs imported successfully')
+print('✓ earthquake module imported successfully')
 print('\nAvailable packages:')
 availability = libs.availability()
 for key, value in availability.items():
