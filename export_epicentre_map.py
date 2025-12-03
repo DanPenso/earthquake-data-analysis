@@ -191,9 +191,8 @@ def build_region_summary(map_df: pd.DataFrame) -> pd.DataFrame:
     return region_summary
 
 
-def build_plotly_map(map_df: pd.DataFrame):
-    if px is None:
-        return None
+def _build_plotly_geo(map_df: pd.DataFrame):
+    """Fallback geo projection map (no tiled base map required)."""
     fig = px.scatter_geo(
         map_df,
         lat="latitude",
@@ -207,8 +206,50 @@ def build_plotly_map(map_df: pd.DataFrame):
         template="plotly_white",
         title="Global epicentre distribution (bubble size ~ magnitude)",
     )
-    fig.update_layout(legend_title_text="Broad region")
+    fig.update_traces(marker=dict(line=dict(width=0.4, color="rgba(0,0,0,0.4)"), opacity=0.7))
+    fig.update_layout(legend_title_text="Broad region", margin=dict(l=0, r=0, t=60, b=0))
     return fig
+
+
+def build_plotly_map(map_df: pd.DataFrame):
+    """Prefer a tiled, zoomable mapbox view; fall back to geo projection if unavailable."""
+    if px is None:
+        return None
+
+    # Try the richer tile-based map (Maplibre) first for a smoother zoom/pan experience.
+    try:
+        custom_cols = ["mag", "depth", "mag_category", "broad_region"]
+        fig = px.scatter_map(
+            map_df,
+            lat="latitude",
+            lon="longitude",
+            color="broad_region",
+            size="mag_size",
+            size_max=22,
+            text="hover_label",
+            custom_data=custom_cols,
+            hover_data={},
+            zoom=1,
+            center={"lat": 0.0, "lon": 0.0},
+            height=650,
+            map_style="open-street-map",
+            title="Global epicentre distribution (interactive tiles; bubble size ~ magnitude)",
+        )
+        hovertemplate = (
+            "<b>%{text}</b><br>"
+            "Mw %{customdata[0]:.1f} · depth %{customdata[1]:.0f} km<br>"
+            "Magnitude class: %{customdata[2]}<br>"
+            "Broad region: %{customdata[3]}<extra></extra>"
+        )
+        fig.update_traces(
+            marker=dict(opacity=0.72),
+            hovertemplate=hovertemplate,
+        )
+        fig.update_layout(legend_title_text="Broad region", margin=dict(l=0, r=0, t=60, b=0))
+        return fig
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        print(f"scatter_map failed ({exc}); falling back to scatter_geo.")
+        return _build_plotly_geo(map_df)
 
 
 def save_matplotlib_png(map_df: pd.DataFrame, png_path: Path):
