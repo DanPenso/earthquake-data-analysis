@@ -21,7 +21,7 @@ try:
     import matplotlib.image as mpimg
     from matplotlib.lines import Line2D
     from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
-except Exception:
+except ImportError:
     plt = None
     mpimg = None
     Line2D = None
@@ -33,7 +33,7 @@ except Exception:
 HAS_SEABORN = True
 try:
     import seaborn as sns
-except Exception:
+except ImportError:
     sns = None
     HAS_SEABORN = False
 
@@ -51,7 +51,7 @@ HAS_PLOTLY = True
 try:
     import plotly.express as px
     import plotly.graph_objects as go
-except Exception:
+except ImportError:
     px = None
     go = None
     HAS_PLOTLY = False
@@ -89,7 +89,7 @@ try:
         roc_auc_score,
         roc_curve,
     )
-except Exception:
+except ImportError:
     HAS_SKLEARN = False
     train_test_split = None
     OneHotEncoder = None
@@ -119,7 +119,7 @@ except Exception:
 HAS_SCIPY = True
 try:
     from scipy.stats import gaussian_kde
-except Exception:
+except ImportError:
     gaussian_kde = None
     HAS_SCIPY = False
 
@@ -199,11 +199,11 @@ def diagnose():
     print("\nChecking availability() from combined script:")
     try:
         avail = availability()
-        print("✓ availability() returned:")
+        print("availability() returned:")
         for k, v in avail.items():
             print(f"  {k}: {v}")
     except Exception as e:
-        print("✗ calling availability() raised:", e)
+        print("calling availability() raised:", e)
 
     # Provide some context similar to debug_setup.py
     print("\nModule context summary:")
