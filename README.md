@@ -8,5 +8,5 @@ Single-notebook layout: open the notebook and run the cells.
 - `docs/`: reserved for future write-ups or reports.
 
 ## Quick start
-- Install Python 3.9+ with `pandas`, `numpy`, `matplotlib`, `seaborn`, `plotly`, `scikit-learn`, and `scipy` (the script handles missing optional libs gracefully).
-- Open `earthquake_analysis.ipynb` in Jupyter or VS Code to read or re-run the analysis (map and plots render inline).
+- Install Python 3.9+ and the dependencies with `python -m pip install -r requirements.txt` (covers pandas, numpy, matplotlib, seaborn, plotly, scikit-learn, scipy, nbclient/nbconvert for execution).
+- Open `earthquake_analysis.ipynb` in Jupyter or VS Code to read or re-run the analysis (map and plots render inline). Section 9 (modelling) requires scikit-learn; earlier cells run without it.
