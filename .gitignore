@@ -21,8 +21,3 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.log
-
-# Generated exports (not committed)
-epicentre_map_section8_2.html
-epicentre_map_section8_2.png
-region_summary_section8_2.csv
