@@ -5,6 +5,10 @@ from pathlib import Path
 import setup_libs as libs
 from pandas.api.types import is_datetime64_any_dtype
 
+ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = ROOT / "data"
+OUTPUTS_DIR = ROOT / "outputs"
+
 pd = libs.pd
 np = libs.np
 px = libs.px
@@ -237,7 +241,7 @@ def build_plotly_map(map_df: pd.DataFrame):
         )
         hovertemplate = (
             "<b>%{text}</b><br>"
-            "Mw %{customdata[0]:.1f} · depth %{customdata[1]:.0f} km<br>"
+            "Mw %{customdata[0]:.1f} x depth %{customdata[1]:.0f} km<br>"
             "Magnitude class: %{customdata[2]}<br>"
             "Broad region: %{customdata[3]}<extra></extra>"
         )
@@ -278,11 +282,12 @@ def save_matplotlib_png(map_df: pd.DataFrame, png_path: Path):
 
 
 def main():
-    root = Path(__file__).parent
-    csv_path = root / "earthquake_dataset.csv"
-    png_path = root / "epicentre_map_section8_2.png"
-    html_path = root / "epicentre_map_section8_2.html"
-    summary_path = root / "region_summary_section8_2.csv"
+    OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    csv_path = DATA_DIR / "earthquake_dataset.csv"
+    png_path = OUTPUTS_DIR / "epicentre_map_section8_2.png"
+    html_path = OUTPUTS_DIR / "epicentre_map_section8_2.html"
+    summary_path = OUTPUTS_DIR / "region_summary_section8_2.csv"
 
     map_df = prepare_map_df(csv_path)
     region_summary = build_region_summary(map_df)
