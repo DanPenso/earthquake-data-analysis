@@ -39,6 +39,13 @@ except ImportError:
     go = None
     HAS_PLOTLY = False
 
+# Optional static export helper (Plotly image export)
+try:
+    import kaleido  # noqa: F401
+    HAS_KALEIDO = True
+except ImportError:
+    HAS_KALEIDO = False
+
 # Optional stats/ML helpers
 try:
     from scipy.stats import gaussian_kde
@@ -96,6 +103,7 @@ def availability() -> dict:
         "HAS_MATPLOTLIB": HAS_MATPLOTLIB,
         "HAS_SEABORN": HAS_SEABORN,
         "HAS_PLOTLY": HAS_PLOTLY,
+        "HAS_KALEIDO": HAS_KALEIDO,
         "HAS_SKLEARN": HAS_SKLEARN,
         "HAS_SCIPY": HAS_SCIPY,
     }
@@ -115,6 +123,7 @@ for name, value in {
     "Line2D": Line2D,
     "px": px,
     "go": go,
+    "HAS_KALEIDO": HAS_KALEIDO,
     "train_test_split": train_test_split,
     "OneHotEncoder": OneHotEncoder,
     "SimpleImputer": SimpleImputer,
