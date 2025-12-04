@@ -55,15 +55,3 @@ Notes:
 - This repository is maintained on the `main` branch. For collaborative development, create feature branches and open pull requests.
 - If you want me to push changes to a branch or open a PR, tell me the branch name and message.
 
-## Contact
-
-- For issues or questions, contact the group email or the detected committer: `dinisnascimento@connect.glos.ac.uk`.
-
-## License
-
-Add a license file if you plan to publish this project. Common choices for academic code are MIT or CC-BY for associated write-ups.
-
----
-
-If you confirm the other two team members' full names and student IDs I will update the top section and commit the change.
-
