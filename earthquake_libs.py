@@ -1,6 +1,17 @@
-"""Shared library imports and helpers for the earthquake notebook."""
+"""Shared library imports and helpers for the earthquake notebook.
+
+This module centralises optional third-party imports and small helper
+functions used by the `earthquake_analysis.ipynb` notebook. The file is
+designed to be safe to import even when some visualization or ML
+dependencies are missing: optional libraries are detected at import time
+and exposed via the `libs` namespace along with availability flags.
+
+Do not change runtime behaviour; the edits below only add concise
+inline comments explaining each logical block for maintainability.
+"""
 from __future__ import annotations
 
+# Core Python stdlib imports used across the project
 from pathlib import Path
 import sys
 import os
@@ -8,10 +19,13 @@ import json
 import warnings
 from datetime import datetime, timedelta
 
+# Fundamental third-party data libraries (required)
 import numpy as np
 import pandas as pd
 
-# Optional plotting and viz libraries
+# Optional plotting and visualization libraries.
+# These imports are attempted inside try/except blocks so the module
+# remains importable even if plotting libraries are not available.
 try:
     import matplotlib.pyplot as plt
     import matplotlib.image as mpimg
@@ -23,6 +37,7 @@ except ImportError:
     Line2D = None
     HAS_MATPLOTLIB = False
 
+# Seaborn provides higher-level statistical plotting convenience.
 try:
     import seaborn as sns
     HAS_SEABORN = True
@@ -30,6 +45,7 @@ except ImportError:
     sns = None
     HAS_SEABORN = False
 
+# Plotly is optional and used for interactive maps when available.
 try:
     import plotly.express as px
     import plotly.graph_objects as go
@@ -39,14 +55,17 @@ except ImportError:
     go = None
     HAS_PLOTLY = False
 
-# Optional static export helper (Plotly image export)
+# Optional static export helper (Plotly image export via Kaleido).
+# Kaleido is only required when exporting Plotly figures to static images.
 try:
     import kaleido  # noqa: F401
     HAS_KALEIDO = True
 except ImportError:
     HAS_KALEIDO = False
 
-# Optional stats/ML helpers
+# Optional scientific / ML helpers (scipy, scikit-learn).
+# These are attempted to provide a rich feature set for notebook
+# sections that run statistical analyses or machine-learning models.
 try:
     from scipy.stats import gaussian_kde
     HAS_SCIPY = True
@@ -55,6 +74,10 @@ except ImportError:
     HAS_SCIPY = False
 
 try:
+    # scikit-learn offers pipeline and modelling building blocks used in
+    # the notebook's modelling section. We import a broad subset so
+    # that downstream cells can rely on availability checks rather
+    # than importing repeatedly.
     from sklearn.model_selection import train_test_split
     from sklearn.preprocessing import OneHotEncoder, StandardScaler
     from sklearn.compose import ColumnTransformer
@@ -80,6 +103,8 @@ try:
     )
     HAS_SKLEARN = True
 except ImportError:
+    # If sklearn is not present, expose None placeholders so callers
+    # can check `libs.HAS_SKLEARN` before using ML functionality.
     train_test_split = OneHotEncoder = StandardScaler = ColumnTransformer = Pipeline = None
     SimpleImputer = None
     LogisticRegression = DecisionTreeClassifier = RandomForestClassifier = GradientBoostingClassifier = None
@@ -90,15 +115,30 @@ except ImportError:
 
 
 def apply_default_plot_style() -> None:
+    """Apply a default seaborn plotting style when seaborn is available.
+
+    This is a convenience for notebook cells so they render with a
+    consistent aesthetic. No-op when seaborn is not installed.
+    """
     if HAS_SEABORN:
         sns.set(style="whitegrid", context="notebook")
 
 
 def silence_warnings() -> None:
+    """Suppress non-critical warnings to reduce notebook noise.
+
+    Call this at runtime if you want to avoid repeated DeprecationWarning
+    or UserWarning messages during exploratory analysis.
+    """
     warnings.filterwarnings("ignore")
 
 
 def availability() -> dict:
+    """Return a dictionary summarising which optional libraries are present.
+
+    Notebook cells use this helper to decide whether to run interactive
+    visualisations or modelling blocks that depend on these packages.
+    """
     return {
         "HAS_MATPLOTLIB": HAS_MATPLOTLIB,
         "HAS_SEABORN": HAS_SEABORN,
@@ -110,10 +150,18 @@ def availability() -> dict:
 
 
 class _Libs:
-    """Namespace-style holder for optional libraries."""
+    """Lightweight namespace to expose libraries and helpers to notebooks.
+
+    Instances of this class act as an attribute container (e.g.
+    `libs.plt`, `libs.np`). The pattern simplifies optional import checks
+    inside notebooks and centralises available helpers.
+    """
 
 
 libs = _Libs()
+# Populate the `libs` namespace with references to imports, helpers and
+# availability flags. Notebook cells import `earthquake_libs.libs` and
+# use these attributes rather than importing packages directly.
 for name, value in {
     "np": np,
     "pd": pd,
@@ -167,13 +215,16 @@ for name, value in {
     setattr(libs, name, value)
 
 
+# Project path configuration: prefer a workspace-local `data/` folder.
 PROJECT_ROOT = Path.cwd()
 if not (PROJECT_ROOT / "data").exists() and (PROJECT_ROOT.parent / "data").exists():
     PROJECT_ROOT = PROJECT_ROOT.parent
 
-DATA_DIR = PROJECT_ROOT / "data"
-OUTPUTS_DIR = PROJECT_ROOT / "outputs"
+DATA_DIR = PROJECT_ROOT / "data"  # location of CSVs and static assets
+OUTPUTS_DIR = PROJECT_ROOT / "outputs"  # where exported figures and tables are written
 
+# Apply the default plot style if seaborn is available. This is safe to call
+# during import and will quietly continue if any backend issues occur.
 try:
     apply_default_plot_style()
 except Exception:
