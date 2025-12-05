@@ -5,7 +5,7 @@ Clean, single-notebook Earthquake Data Analysis for the 2023 USGS catalogue.
 **Group project — 3 members**
 
 - Member  Name (Student ID)  — PLEASE REPLACE
-- Member  Name (Student ID)  — PLEASE REPLACE
+- Hasini  Adihetty (S4530499) - s4530499@glos.ac.uk
 - Dinis Nascimento <dinisnascimento@connect.glos.ac.uk>  (detected from git history)
 
 
