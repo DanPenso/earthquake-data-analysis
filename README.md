@@ -23,9 +23,9 @@ catalogue. The analysis is implemented in a single Jupyter notebook that:
 
 ## Layout
 
-- `earthquake_analysis.ipynb` — main analysis notebook with narrative, code and plots.
-- `earthquake_libs.py` — shared helper module (optional imports and convenience functions).
-- `data/` — input files: `earthquake_dataset.csv`, `plate_boundaries.csv`, `world_map.png`.
+- `earthquake-analysis.ipynb` — main analysis notebook with narrative, code and plots.
+- `earthquakelibs.py` — shared helper module (optional imports and convenience functions).
+- `data/` — input files: `earthquake-dataset.csv`, `plate-boundaries.csv`, `world-map.png`.
 - `outputs/` — generated artifacts (CSV, PNG, HTML exports) created by the notebook when export flags are enabled.
 - `docs/` — reserved for longer reports or exported documentation.
 
@@ -39,7 +39,7 @@ conda activate earthquake
 python -m pip install -r requirements.txt
 ```
 
-2. Open `earthquake_analysis.ipynb` in Jupyter Lab, Jupyter Notebook, or VS Code and run the cells.
+2. Open `earthquake-analysis.ipynb` in Jupyter Lab, Jupyter Notebook, or VS Code and run the cells.
 
 Notes:
 - The notebook is written to be tolerant of optional libraries — Plotly, Seaborn and scikit-learn are used when available but the EDA sections run without all of them.
