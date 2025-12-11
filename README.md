@@ -32,7 +32,7 @@ catalogue. The analysis is implemented in a single Jupyter notebook that:
 - `earthquakelibs.py` - shared helper module (optional imports and convenience functions).
 - `Data/` - input files: `earthquake-dataset.csv`, `plate-boundaries.csv`, `world-map.png`.
 - `Outputs_SourceFiles/` - generated artifacts (CSV, PNG, HTML exports) created by the notebook when export flags are enabled.
-- `Docs/Earthquake-Report.md` - structured, narrative report (PhD-style) summarising data, cleaning, EDA, modelling, and outputs.
+- `Click-Here-For-More-Explanation/Earthquake-Report.md` - structured, narrative report (PhD-style) summarising data, cleaning, EDA, modelling, and outputs.
 
 Repository hygiene: `.gitignore` excludes `Data/` and `Outputs_SourceFiles/` so version control retains only the notebook, helper module, README, and `requirements.txt`, avoiding accidental commits of large binaries.
 
