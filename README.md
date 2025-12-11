@@ -31,8 +31,8 @@ catalogue. The analysis is implemented in a single Jupyter notebook that:
 - `earthquake-analysis.ipynb` - main analysis notebook with narrative, code and plots.
 - `earthquakelibs.py` - shared helper module (optional imports and convenience functions).
 - `Data/` - input files: `earthquake-dataset.csv`, `plate-boundaries.csv`, `world-map.png`.
-- `Outputs_SourceFiles/` - generated artifacts (CSV, PNG, HTML exports) created by the notebook when export flags are enabled.
-- `Click-Here-For-More-Explanation/Earthquake-Report.md` - structured, narrative report (PhD-style) summarising data, cleaning, EDA, modelling, and outputs.
+- `Outputs/` (or `OutputsSourceFiles/` if you prefer the legacy name) - generated artifacts (CSV, PNG, HTML exports) created by the notebook when export flags are enabled.
+- `ClickHereForMoreExplanation/Earthquake-Report.md` - structured, narrative report (PhD-style) summarising data, cleaning, EDA, modelling, and outputs.
 
 Repository hygiene: `.gitignore` excludes `Data/` and `Outputs_SourceFiles/` so version control retains only the notebook, helper module, README, and `requirements.txt`, avoiding accidental commits of large binaries.
 
@@ -70,7 +70,7 @@ Install the following packages (versions are minimums):
 
 ## Reproducing results and outputs
 
-- To reproduce exported artifacts (HTML/PNG/CSV), enable the export flags in the notebook cells (Section 8.2 sets `export_epicentre_outputs`) and re-run the relevant cells. Outputs will be written to `Outputs_SourceFiles/`.
+- To reproduce exported artifacts (HTML/PNG/CSV), enable the export flags in the notebook cells (Section 8.2 sets `export_epicentre_outputs`) and re-run the relevant cells. Outputs will be written to `Outputs/` (or `OutputsSourceFiles/` for backward compatibility).
 - The pipeline is deterministic given the same input CSV and environment; track `requirements.txt` and the timestamps of raw data to ensure reproducibility.
 
 ## Contributing / Git workflow

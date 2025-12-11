@@ -24,3 +24,5 @@ Thumbs.db
 
 # Ignore generated outputs (plots, exported HTML/PNG)
 outputs/
+Outputs/
+OutputsSourceFiles/

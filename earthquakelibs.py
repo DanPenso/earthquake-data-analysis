@@ -215,13 +215,21 @@ for name, value in {
     setattr(libs, name, value)
 
 
-# Project path configuration: prefer a workspace-local `data/` folder.
+# Project path configuration: prefer clean, capitalised folder names but remain
+# backward compatible with earlier lowercase/underscore variants.
 PROJECT_ROOT = Path.cwd()
-if not (PROJECT_ROOT / "data").exists() and (PROJECT_ROOT.parent / "data").exists():
-    PROJECT_ROOT = PROJECT_ROOT.parent
+candidate_roots = [PROJECT_ROOT, PROJECT_ROOT.parent]
 
-DATA_DIR = PROJECT_ROOT / "data"  # location of CSVs and static assets
-OUTPUTS_DIR = PROJECT_ROOT / "outputs"  # where exported figures and tables are written
+def _first_existing(root: Path, names: tuple[str, ...]) -> Path:
+    for name in names:
+        candidate = root / name
+        if candidate.exists():
+            return candidate
+    # default to the first name under the current root if nothing exists yet
+    return root / names[0]
+
+DATA_DIR = _first_existing(PROJECT_ROOT, ("Data", "data"))
+OUTPUTS_DIR = _first_existing(PROJECT_ROOT, ("Outputs", "outputs", "OutputsSourceFiles"))
 
 # Apply the default plot style if seaborn is available. This is safe to call
 # during import and will quietly continue if any backend issues occur.
@@ -240,5 +248,4 @@ __all__ = [
     "DATA_DIR",
     "OUTPUTS_DIR",
 ]
-
 
