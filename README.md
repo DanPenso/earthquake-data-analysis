@@ -9,9 +9,9 @@ Clean, single-notebook Earthquake Data Analysis for the 2023 USGS catalogue.
 - Dinis Nascimeto (4540434) - dinisnascimento@connect.glos.ac.uk
 
 **Work split (as reflected in the notebook structure)**
-- Member Name - data acquisition, folder setup (Data/), and baseline cleaning pipeline.
-- Hasini Adihetty - exploratory analyses and spatial/quality visualisations (Sections 3, 4, 8).
-- Dinis Nascimeto - modelling pipeline, reproducibility plumbing (hash/env capture), and export routines (Section 9 and Outputs_SourceFiles/ automation).
+- Member Name - 
+- Hasini Adihetty -
+- Dinis Nascimeto - 
 All three reviewed the full notebook narrative and QA (hash logging, seeds, flowchart, and TOC) to ensure a consistent, submission-ready storyline.
 
 If you provide the full names and student IDs I will fill them in here.

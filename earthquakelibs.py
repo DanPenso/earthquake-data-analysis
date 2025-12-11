@@ -146,7 +146,7 @@ def availability() -> dict:
         "HAS_KALEIDO": HAS_KALEIDO,
         "HAS_SKLEARN": HAS_SKLEARN,
         "HAS_SCIPY": HAS_SCIPY,
-    }
+}
 
 
 class _Libs:
@@ -239,6 +239,40 @@ except Exception:
     pass
 
 
+def plot_hist_with_stats(series, ax=None, title=None, xlabel=None):
+    """Plot a simple histogram with mean/median reference lines."""
+    if plt is None:
+        return None
+    ax = ax or plt.gca()
+    ax.hist(series.dropna(), bins=30, color="steelblue", alpha=0.7)
+    if len(series.dropna()):
+        mean = series.mean()
+        median = series.median()
+        ax.axvline(mean, color="red", linestyle="--", label=f"Mean {mean:.2f}")
+        ax.axvline(median, color="green", linestyle="-.", label=f"Median {median:.2f}")
+    if title:
+        ax.set_title(title)
+    if xlabel:
+        ax.set_xlabel(xlabel)
+    ax.legend()
+    return ax
+
+
+def plot_scatter_geo(df, lat_col="latitude", lon_col="longitude", color_col=None, size_col=None, **kwargs):
+    """Create a Plotly scatter_geo figure if plotly is available; else return None."""
+    if px is None:
+        return None
+    fig = px.scatter_geo(
+        df,
+        lat=lat_col,
+        lon=lon_col,
+        color=color_col,
+        size=size_col,
+        **kwargs,
+    )
+    return fig
+
+
 __all__ = [
     "libs",
     "apply_default_plot_style",
@@ -247,5 +281,21 @@ __all__ = [
     "PROJECT_ROOT",
     "DATA_DIR",
     "OUTPUTS_DIR",
+    "plot_hist_with_stats",
+    "plot_scatter_geo",
 ]
 
+
+def main():
+    """Print simple diagnostics when run as a script."""
+    import platform
+
+    print("Library availability:", availability())
+    print("PROJECT_ROOT:", PROJECT_ROOT)
+    print("DATA_DIR:", DATA_DIR)
+    print("OUTPUTS_DIR:", OUTPUTS_DIR)
+    print("Python version:", platform.python_version())
+
+
+if __name__ == "__main__":
+    main()
