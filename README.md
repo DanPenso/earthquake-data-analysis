@@ -2,12 +2,17 @@
 
 Clean, single-notebook Earthquake Data Analysis for the 2023 USGS catalogue.
 
-**Group project — 3 members**
+**Group project - 3 members**
 
-- Member  Name (Student ID)  — PLEASE REPLACE
-- Hasini  Adihetty (S4530499) - s4530499@glos.ac.uk
-- Dinis Nascimento <dinisnascimento@connect.glos.ac.uk>  (detected from git history)
+- Member Name (Student ID) - PLEASE REPLACE
+- Hasini Adihetty (S4530499) - s4530499@glos.ac.uk
+- Dinis Nascimento <dinisnascimento@connect.glos.ac.uk> (detected from git history)
 
+**Work split (as reflected in the notebook structure)**
+- Member Name - data acquisition, folder setup (Data/), and baseline cleaning pipeline.
+- Hasini Adihetty - exploratory analyses and spatial/quality visualisations (Sections 3, 4, 8).
+- Dinis Nascimento - modelling pipeline, reproducibility plumbing (hash/env capture), and export routines (Section 9 and Outputs_SourceFiles/ automation).
+All three reviewed the full notebook narrative and QA (hash logging, seeds, flowchart, and TOC) to ensure a consistent, submission-ready storyline.
 
 If you provide the full names and student IDs I will fill them in here.
 
@@ -23,11 +28,13 @@ catalogue. The analysis is implemented in a single Jupyter notebook that:
 
 ## Layout
 
-- `earthquake-analysis.ipynb` — main analysis notebook with narrative, code and plots.
-- `earthquakelibs.py` — shared helper module (optional imports and convenience functions).
-- `data/` — input files: `earthquake-dataset.csv`, `plate-boundaries.csv`, `world-map.png`.
-- `outputs/` — generated artifacts (CSV, PNG, HTML exports) created by the notebook when export flags are enabled.
-- `docs/` — reserved for longer reports or exported documentation.
+- `earthquake-analysis.ipynb` - main analysis notebook with narrative, code and plots.
+- `earthquakelibs.py` - shared helper module (optional imports and convenience functions).
+- `Data/` - input files: `earthquake-dataset.csv`, `plate-boundaries.csv`, `world-map.png`.
+- `Outputs_SourceFiles/` - generated artifacts (CSV, PNG, HTML exports) created by the notebook when export flags are enabled.
+- `Docs/Earthquake-Report.md` - structured, narrative report (PhD-style) summarising data, cleaning, EDA, modelling, and outputs.
+
+Repository hygiene: `.gitignore` excludes `Data/` and `Outputs_SourceFiles/` so version control retains only the notebook, helper module, README, and `requirements.txt`, avoiding accidental commits of large binaries.
 
 ## Quick start
 
@@ -42,16 +49,31 @@ python -m pip install -r requirements.txt
 2. Open `earthquake-analysis.ipynb` in Jupyter Lab, Jupyter Notebook, or VS Code and run the cells.
 
 Notes:
-- The notebook is written to be tolerant of optional libraries — Plotly, Seaborn and scikit-learn are used when available but the EDA sections run without all of them.
+- The notebook is written to be tolerant of optional libraries - Plotly, Seaborn and scikit-learn are used when available but the EDA sections run without all of them.
 - Section 9 (modelling) requires `scikit-learn`; export of interactive Plotly figures to PNG requires `kaleido`.
+
+## Requirements
+
+Install the following packages (versions are minimums):
+- numpy>=1.23
+- pandas>=1.5
+- matplotlib>=3.7
+- seaborn>=0.12
+- plotly>=5.18
+- kaleido>=1.2
+- scikit-learn>=1.3
+- scipy>=1.10
+- nbformat>=5.9
+- nbclient>=0.9
+- ipykernel>=6.26
+- nbconvert>=7.10
 
 ## Reproducing results and outputs
 
-- To reproduce exported artifacts (HTML/PNG/CSV), enable the export flags in the notebook cells (Section 8.2 sets `export_epicentre_outputs`) and re-run the relevant cells. Outputs will be written to `outputs/`.
+- To reproduce exported artifacts (HTML/PNG/CSV), enable the export flags in the notebook cells (Section 8.2 sets `export_epicentre_outputs`) and re-run the relevant cells. Outputs will be written to `Outputs_SourceFiles/`.
 - The pipeline is deterministic given the same input CSV and environment; track `requirements.txt` and the timestamps of raw data to ensure reproducibility.
 
 ## Contributing / Git workflow
 
 - This repository is maintained on the `main` branch. For collaborative development, create feature branches and open pull requests.
 - If you want me to push changes to a branch or open a PR, tell me the branch name and message.
-
