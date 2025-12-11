@@ -1,28 +1,17 @@
-# Jupyter notebook checkpoints
+﻿# See "Ignore Rules for Project.txt" for documentation of these patterns.
 .ipynb_checkpoints/
-
-# VS Code settings
 .vscode/
-
-# Python cache
 __pycache__/
 *.pyc
 *.pyo
-
-# Environment folders (never commit)
 env/
 venv/
 .venv/
-
-# OS junk files
 .DS_Store
 Thumbs.db
-
-# Temporary files
 *.tmp
 *.log
-
-# Ignore generated outputs (plots, exported HTML/PNG)
 outputs/
 Outputs/
 OutputsSourceFiles/
+Data/

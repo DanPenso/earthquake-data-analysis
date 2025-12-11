@@ -6,12 +6,12 @@ Clean, single-notebook Earthquake Data Analysis for the 2023 USGS catalogue.
 
 - Member Name (Student ID) - PLEASE REPLACE
 - Hasini Adihetty (S4530499) - s4530499@glos.ac.uk
-- Dinis Nascimento <dinisnascimento@connect.glos.ac.uk> (detected from git history)
+- Dinis Nascimeto (4540434) - dinisnascimento@connect.glos.ac.uk
 
 **Work split (as reflected in the notebook structure)**
 - Member Name - data acquisition, folder setup (Data/), and baseline cleaning pipeline.
 - Hasini Adihetty - exploratory analyses and spatial/quality visualisations (Sections 3, 4, 8).
-- Dinis Nascimento - modelling pipeline, reproducibility plumbing (hash/env capture), and export routines (Section 9 and Outputs_SourceFiles/ automation).
+- Dinis Nascimeto - modelling pipeline, reproducibility plumbing (hash/env capture), and export routines (Section 9 and Outputs_SourceFiles/ automation).
 All three reviewed the full notebook narrative and QA (hash logging, seeds, flowchart, and TOC) to ensure a consistent, submission-ready storyline.
 
 If you provide the full names and student IDs I will fill them in here.
@@ -34,7 +34,7 @@ catalogue. The analysis is implemented in a single Jupyter notebook that:
 - `Outputs/` (or `OutputsSourceFiles/` if you prefer the legacy name) - generated artifacts (CSV, PNG, HTML exports) created by the notebook when export flags are enabled.
 - `Click Here For More Explanation/Earthquake Report.md` - structured, narrative report (PhD-style) summarising data, cleaning, EDA, modelling, and outputs.
 
-Repository hygiene: `.gitignore` excludes `Data/` and `Outputs_SourceFiles/` so version control retains only the notebook, helper module, README, and `requirements.txt`, avoiding accidental commits of large binaries.
+Repository hygiene: see `Ignore Rules for Project.txt` (replaces `.gitignore`). Data and outputs are excluded from version control so the repo only tracks code and docs.
 
 ## Quick start
 
