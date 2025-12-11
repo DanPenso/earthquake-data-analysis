@@ -1,13 +1,10 @@
-"""Shared library imports and helpers for the earthquake notebook.
+"""Shared imports and helper utilities for the Earthquake Analysis notebook.
 
-This module centralises optional third-party imports and small helper
-functions used by the `earthquake-analysis.ipynb` notebook. The file is
-designed to be safe to import even when some visualization or ML
-dependencies are missing: optional libraries are detected at import time
-and exposed via the `libs` namespace along with availability flags.
-
-Do not change runtime behaviour; the edits below only add concise
-inline comments explaining each logical block for maintainability.
+This module centralises optional third-party imports, project paths, and small
+helper functions used in the `Earthquake Analysis.ipynb` notebook. It is
+designed to be safe to import even if some visualisation or ML dependencies
+are missing: optional libraries are detected at import time and exposed via
+the `libs` namespace along with simple availability flags.
 """
 from __future__ import annotations
 
