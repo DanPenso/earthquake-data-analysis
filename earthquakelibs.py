@@ -212,10 +212,14 @@ for name, value in {
     setattr(libs, name, value)
 
 
-# Project path configuration: prefer clean, capitalised folder names but remain
-# backward compatible with earlier lowercase/underscore variants.
-PROJECT_ROOT = Path.cwd()
-candidate_roots = [PROJECT_ROOT, PROJECT_ROOT.parent]
+# Project path configuration.
+#
+# Key requirement: use relative paths and ensure the project runs correctly
+# when downloaded and executed from either the repo root or the project folder.
+#
+# We anchor paths to the directory containing this module (the project folder),
+# which is stable regardless of the current working directory.
+PROJECT_ROOT = Path(__file__).resolve().parent
 
 def _first_existing(root: Path, names: tuple[str, ...]) -> Path:
     for name in names:
@@ -225,8 +229,9 @@ def _first_existing(root: Path, names: tuple[str, ...]) -> Path:
     # default to the first name under the current root if nothing exists yet
     return root / names[0]
 
+# Accept standardised folder names (and lowercase variants for Windows-created folders).
 DATA_DIR = _first_existing(PROJECT_ROOT, ("Data", "data"))
-OUTPUTS_DIR = _first_existing(PROJECT_ROOT, ("Outputs", "outputs", "OutputsSourceFiles"))
+OUTPUTS_DIR = _first_existing(PROJECT_ROOT, ("Outputs", "outputs"))
 
 # Apply the default plot style if seaborn is available. This is safe to call
 # during import and will quietly continue if any backend issues occur.

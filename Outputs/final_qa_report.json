@@ -1,0 +1,78 @@
+{
+  "expected_files": {
+    "project_folder_exists": true,
+    "notebook": true,
+    "libs": true,
+    "final_markdown": false,
+    "readme": true,
+    "tools_folder": false,
+    "report_md": false
+  },
+  "project_root": "E:\\Master Degree\\1\u00ba semester\\Python Notebooks and Scripting\\earthquake-data-analysis-main\\Earthquake Data Analysis",
+  "data_dir": "E:\\Master Degree\\1\u00ba semester\\Python Notebooks and Scripting\\earthquake-data-analysis-main\\Earthquake Data Analysis\\data",
+  "data_csvs": [
+    "Earthquake Dataset.csv",
+    "Plate Boundaries.csv"
+  ],
+  "outputs_exists": true,
+  "outputs_png": [],
+  "outputs_html": [
+    "epicentre_map_section5_2.html"
+  ],
+  "outputs_csv": [
+    "region_summary_section5_2.csv"
+  ],
+  "outputs_pdf": [],
+  "figure_png_fallbacks": [],
+  "extra_folder_check": {
+    "exists": true,
+    "referenced_anywhere": true,
+    "references": {
+      "in_notebook": true,
+      "in_readme": false,
+      "in_final_markdown": false
+    }
+  },
+  "captions": {
+    "table_of_figures_present": true,
+    "table_of_tables_present": true,
+    "figure_caption_count": 18,
+    "table_caption_count": 4,
+    "figure_numbering": {
+      "ok": true,
+      "start": 1,
+      "end": 18,
+      "missing": [],
+      "dupes": [],
+      "count": 18
+    },
+    "table_numbering": {
+      "ok": true,
+      "start": 1,
+      "end": 4,
+      "missing": [],
+      "dupes": [],
+      "count": 4
+    },
+    "missing_figure_shows_for": [],
+    "missing_table_shows_for": []
+  },
+  "requirements": {
+    "project_folder_exists": true,
+    "notebook_exists": true,
+    "readme_exists": true,
+    "data_folder_found": true,
+    "data_csv_found": true,
+    "outputs_folder_exists": true,
+    "table_of_figures_present": true,
+    "table_of_tables_present": true,
+    "figure_captions_present": true,
+    "figure_numbering_continuous": true,
+    "each_figure_has_shows": true,
+    "table_captions_present": true,
+    "table_numbering_continuous": true,
+    "each_table_has_shows": true,
+    "plotly_png_fallbacks_exist": false
+  },
+  "overall_pass": false
+}

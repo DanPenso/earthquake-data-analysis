@@ -2,13 +2,14 @@
 
 Clean, single notebook earthquake data analysis for the 2023 USGS catalogue.
 
-**Group project — 3 members**
+## Group project — 3 members
 
 - Daniel Penson (4520042)
 - Hasini Adihetty (S4530499)
 - Dinis Nascimento (4540434)
 
-**Work split (as reflected in the notebook structure)**  
+## Work split (as reflected in the notebook structure)
+
 - Hasini Adihetty: initial data exploration, cleaning narrative, and depth and magnitude EDA.  
 - Dinis Nascimento: feature engineering design, regional/tectonic analysis, and strong quake modelling.  
 - Daniel Penson: documentation updates and final QA.  
@@ -28,11 +29,10 @@ catalogue. The analysis is implemented in a single Jupyter notebook that:
 
 - `Earthquake Analysis.ipynb`: main analysis notebook with narrative, code and plots.
 - `earthquakelibs.py`: shared helper module (optional imports and convenience functions).
-- `data/`: input files: `Earthquake Dataset.csv`, `Plate Boundaries.csv`, `World Map.png`, `uni-glos-logo.png`.
-- `outputs/`: generated artifacts (CSV, PNG, HTML exports) created by the notebook when export flags are enabled.
-- `docs/`: reserved for longer reports or exported documentation (for example, `Earthquake Report.md` or PDF exports).
+- `Data/`: input files: `Earthquake Dataset.csv`, `Plate Boundaries.csv`, `World Map.png`, `UniLogo.png`.
+- `Outputs/`: generated artifacts (CSV, PNG, HTML exports) created by the notebook.
 
-Repository hygiene: see `Ignore Rules for Project.txt` (replaces `.gitignore`). Data and outputs are excluded from version control so the repo only tracks code and docs.
+Repository hygiene: `.gitignore` excludes environment and cache folders.
 
 ## Quick start
 
@@ -44,15 +44,17 @@ conda activate earthquake
 python -m pip install -r requirements.txt
 ```
 
-2. Open `Earthquake Analysis.ipynb` in Jupyter Lab, Jupyter Notebook, or VS Code and run the cells.
+1. Open `Earthquake Analysis.ipynb` in Jupyter Lab, Jupyter Notebook, or VS Code and run the cells.
 
 Notes:
+
 - The notebook is written to be tolerant of optional libraries - Plotly, Seaborn and scikit-learn are used when available but the EDA sections run without all of them.
 - Section 6 (modelling) requires `scikit-learn`; export of interactive Plotly figures to PNG requires `kaleido`.
 
 ## Requirements
 
 Install the following packages (versions are minimums):
+
 - numpy>=1.23
 - pandas>=1.5
 - matplotlib>=3.7
@@ -70,6 +72,8 @@ Install the following packages (versions are minimums):
 
 - To reproduce exported artifacts (HTML/PNG/CSV), enable the export flags in the notebook cells (Section 8.2 sets `export_epicentre_outputs`) and re-run the relevant cells. Outputs will be written to `outputs/` (or `OutputsSourceFiles/` for backward compatibility).
 - The pipeline is deterministic given the same input CSV and environment; track `requirements.txt` and the timestamps of raw data to ensure reproducibility.
+
+Note: This repo uses `Outputs/` (capital O) as the output folder.
 
 ## Contributing / Git workflow
 
