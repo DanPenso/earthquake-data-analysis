@@ -146,6 +146,11 @@ def availability() -> dict:
 }
 
 
+def fmt_pm(mean: float, sd: float, decimals: int = 3) -> str:
+    """Format a mean ± standard deviation string with a fixed precision."""
+    return f"{mean:.{decimals}f} ± {sd:.{decimals}f}"
+
+
 class _Libs:
     """Lightweight namespace to expose libraries and helpers to notebooks.
 
@@ -203,6 +208,7 @@ for name, value in {
     "apply_default_plot_style": apply_default_plot_style,
     "silence_warnings": silence_warnings,
     "availability": availability,
+    "fmt_pm": fmt_pm,
     "HAS_MATPLOTLIB": HAS_MATPLOTLIB,
     "HAS_SEABORN": HAS_SEABORN,
     "HAS_PLOTLY": HAS_PLOTLY,
@@ -280,6 +286,7 @@ __all__ = [
     "apply_default_plot_style",
     "silence_warnings",
     "availability",
+    "fmt_pm",
     "PROJECT_ROOT",
     "DATA_DIR",
     "OUTPUTS_DIR",
