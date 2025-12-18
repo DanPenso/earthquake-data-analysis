@@ -1,33 +1,6 @@
-# Python bytecode / cache
+.venv/
 __pycache__/
-*.py[cod]
-*$py.class
-
-# Explicit bytecode patterns (required)
+.ipynb_checkpoints/
 *.pyc
 *.pyo
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Virtual environments
-.venv/
-venv/
-ENV/
-.env/
-
-# VS Code
-.vscode/
-
-# OS junk
-Thumbs.db
 .DS_Store
-
-# QA-report workaround folder should never be committed
-Earthquake Data Analysis/
-
-# Local cleanup artifacts
-.cleanup_tmp/
-
-# QA-report workaround: nested folder created for legacy path logic
-Earthquake Data Analysis/

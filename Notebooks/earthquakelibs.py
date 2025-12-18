@@ -147,8 +147,34 @@ def availability() -> dict:
 
 
 def fmt_pm(mean: float, sd: float, decimals: int = 3) -> str:
-    """Format a mean ± standard deviation string with a fixed precision."""
-    return f"{mean:.{decimals}f} ± {sd:.{decimals}f}"
+    """Format a mean +/- standard deviation string with a fixed precision."""
+    return f"{mean:.{decimals}f} \u00B1 {sd:.{decimals}f}"
+
+
+# Project path configuration for the reorganised repository structure.
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+INSTRUCTIONS_DIR = PROJECT_ROOT / "Instructions"
+NOTEBOOKS_DIR = PROJECT_ROOT / "Notebooks"
+DATA_DIR = PROJECT_ROOT / "Data"
+RAW_DIR = DATA_DIR / "Raw"
+PROCESSED_DIR = DATA_DIR / "Processed"
+FIGURES_DIR = PROCESSED_DIR / "Figures"
+MAPS_DIR = PROCESSED_DIR / "Maps"
+TABLES_DIR = PROCESSED_DIR / "Tables"
+IMAGES_DIR = PROCESSED_DIR / "Images"
+
+# Canonical inputs for the report.
+DATA_FILE = RAW_DIR / "Earthquake Dataset.csv"
+WORLD_MAP_FILE = IMAGES_DIR / "World Map.png"
+UNI_LOGO_FILE = IMAGES_DIR / "UniLogo.png"
+PLATE_FILE = RAW_DIR / "Plate Boundaries.csv"
+
+# Ensure expected directories exist for outputs and assets.
+for _p in (RAW_DIR, PROCESSED_DIR, FIGURES_DIR, MAPS_DIR, TABLES_DIR, IMAGES_DIR):
+    _p.mkdir(parents=True, exist_ok=True)
+
+# Backward-compatible alias for older notebook variables.
+OUTPUTS_DIR = PROCESSED_DIR
 
 
 class _Libs:
@@ -205,6 +231,21 @@ for name, value in {
     "json": json,
     "datetime": datetime,
     "timedelta": timedelta,
+    "PROJECT_ROOT": PROJECT_ROOT,
+    "INSTRUCTIONS_DIR": INSTRUCTIONS_DIR,
+    "NOTEBOOKS_DIR": NOTEBOOKS_DIR,
+    "DATA_DIR": DATA_DIR,
+    "RAW_DIR": RAW_DIR,
+    "PROCESSED_DIR": PROCESSED_DIR,
+    "FIGURES_DIR": FIGURES_DIR,
+    "MAPS_DIR": MAPS_DIR,
+    "TABLES_DIR": TABLES_DIR,
+    "IMAGES_DIR": IMAGES_DIR,
+    "DATA_FILE": DATA_FILE,
+    "WORLD_MAP_FILE": WORLD_MAP_FILE,
+    "UNI_LOGO_FILE": UNI_LOGO_FILE,
+    "PLATE_FILE": PLATE_FILE,
+    "OUTPUTS_DIR": OUTPUTS_DIR,
     "apply_default_plot_style": apply_default_plot_style,
     "silence_warnings": silence_warnings,
     "availability": availability,
@@ -218,26 +259,6 @@ for name, value in {
     setattr(libs, name, value)
 
 
-# Project path configuration.
-#
-# Key requirement: use relative paths and ensure the project runs correctly
-# when downloaded and executed from either the repo root or the project folder.
-#
-# We anchor paths to the directory containing this module (the project folder),
-# which is stable regardless of the current working directory.
-PROJECT_ROOT = Path(__file__).resolve().parent
-
-def _first_existing(root: Path, names: tuple[str, ...]) -> Path:
-    for name in names:
-        candidate = root / name
-        if candidate.exists():
-            return candidate
-    # default to the first name under the current root if nothing exists yet
-    return root / names[0]
-
-# Accept standardised folder names (and lowercase variants for Windows-created folders).
-DATA_DIR = _first_existing(PROJECT_ROOT, ("Data", "data"))
-OUTPUTS_DIR = _first_existing(PROJECT_ROOT, ("Outputs", "outputs"))
 
 # Apply the default plot style if seaborn is available. This is safe to call
 # during import and will quietly continue if any backend issues occur.
@@ -288,11 +309,24 @@ __all__ = [
     "availability",
     "fmt_pm",
     "PROJECT_ROOT",
+    "INSTRUCTIONS_DIR",
+    "NOTEBOOKS_DIR",
     "DATA_DIR",
+    "RAW_DIR",
+    "PROCESSED_DIR",
+    "FIGURES_DIR",
+    "MAPS_DIR",
+    "TABLES_DIR",
+    "IMAGES_DIR",
+    "DATA_FILE",
+    "WORLD_MAP_FILE",
+    "UNI_LOGO_FILE",
+    "PLATE_FILE",
     "OUTPUTS_DIR",
     "plot_hist_with_stats",
     "plot_scatter_geo",
 ]
+
 
 
 def main():
@@ -302,7 +336,12 @@ def main():
     print("Library availability:", availability())
     print("PROJECT_ROOT:", PROJECT_ROOT)
     print("DATA_DIR:", DATA_DIR)
-    print("OUTPUTS_DIR:", OUTPUTS_DIR)
+    print("RAW_DIR:", RAW_DIR)
+    print("PROCESSED_DIR:", PROCESSED_DIR)
+    print("FIGURES_DIR:", FIGURES_DIR)
+    print("MAPS_DIR:", MAPS_DIR)
+    print("TABLES_DIR:", TABLES_DIR)
+    print("IMAGES_DIR:", IMAGES_DIR)
     print("Python version:", platform.python_version())
 
 
