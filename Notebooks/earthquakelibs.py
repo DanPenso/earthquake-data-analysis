@@ -302,12 +302,96 @@ def plot_scatter_geo(df, lat_col="latitude", lon_col="longitude", color_col=None
     return fig
 
 
+class EarthquakePipeline:
+    """Lightweight orchestrator to run the notebook steps with shared paths."""
+
+    def __init__(
+        self,
+        data_file: Path = DATA_FILE,
+        outputs_dir: Path = PROCESSED_DIR,
+        figures_dir: Path = FIGURES_DIR,
+        maps_dir: Path = MAPS_DIR,
+        tables_dir: Path = TABLES_DIR,
+        clean_fn=None,
+        engineer_fn=None,
+        train_fn=None,
+        evaluate_fn=None,
+    ) -> None:
+        self.data_file = Path(data_file)
+        self.outputs_dir = Path(outputs_dir)
+        self.figures_dir = Path(figures_dir)
+        self.maps_dir = Path(maps_dir)
+        self.tables_dir = Path(tables_dir)
+        for path in (self.outputs_dir, self.figures_dir, self.maps_dir, self.tables_dir):
+            path.mkdir(parents=True, exist_ok=True)
+        self.clean_fn = clean_fn
+        self.engineer_fn = engineer_fn
+        self.train_fn = train_fn
+        self.evaluate_fn = evaluate_fn
+        self.raw_df = None
+        self.clean_df = None
+        self.feat_df = None
+        self.audit_df = None
+
+    def load(self) -> pd.DataFrame:
+        """Load the raw catalogue from disk."""
+        df = pd.read_csv(self.data_file, parse_dates=["time", "updated"], infer_datetime_format=True)
+        self.raw_df = df
+        return df
+
+    def clean(self, df: pd.DataFrame | None = None, **kwargs):
+        """Clean the raw dataframe using the configured cleaning function."""
+        if self.clean_fn is None:
+            raise ValueError("clean_fn is not set on EarthquakePipeline.")
+        df_in = df if df is not None else self.raw_df
+        if df_in is None:
+            raise ValueError("No dataframe provided to clean().")
+        result = self.clean_fn(df_in, **kwargs)
+        if isinstance(result, tuple):
+            self.clean_df, self.audit_df = result[0], result[1]
+        else:
+            self.clean_df = result
+        return result
+
+    def engineer(self, df: pd.DataFrame | None = None, **kwargs) -> pd.DataFrame:
+        """Engineer features using the configured feature function."""
+        if self.engineer_fn is None:
+            raise ValueError("engineer_fn is not set on EarthquakePipeline.")
+        df_in = df if df is not None else self.clean_df
+        if df_in is None:
+            raise ValueError("No dataframe provided to engineer().")
+        self.feat_df = self.engineer_fn(df_in, **kwargs)
+        return self.feat_df
+
+    def save_outputs(self, cleaned_df: pd.DataFrame | None = None, filename: str = "Earthquakes 2023 clean.csv") -> Path:
+        """Save the cleaned dataset to the processed outputs directory."""
+        df = cleaned_df if cleaned_df is not None else self.clean_df
+        if df is None:
+            raise ValueError("No cleaned dataframe available to save.")
+        out_path = self.outputs_dir / filename
+        df.to_csv(out_path, index=False)
+        return out_path
+
+    def train(self, *args, **kwargs):
+        """Run the training callback if configured."""
+        if self.train_fn is None:
+            raise ValueError("train_fn is not set on EarthquakePipeline.")
+        return self.train_fn(*args, **kwargs)
+
+    def evaluate(self, *args, **kwargs):
+        """Run the evaluation callback if configured."""
+        if self.evaluate_fn is None:
+            raise ValueError("evaluate_fn is not set on EarthquakePipeline.")
+        return self.evaluate_fn(*args, **kwargs)
+
+
 __all__ = [
     "libs",
     "apply_default_plot_style",
     "silence_warnings",
     "availability",
     "fmt_pm",
+    "EarthquakePipeline",
     "PROJECT_ROOT",
     "INSTRUCTIONS_DIR",
     "NOTEBOOKS_DIR",

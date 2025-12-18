@@ -1,0 +1,6 @@
+step,n_before,n_after,removed,removed_pct,reason
+Drop exact duplicates,26642,24682,1960,7.36,Remove identical rows to avoid double-counting.
+Keep latest per ID,24682,24682,0,0.0,Keep only the most recent revision for each event ID.
+Drop missing essentials,24682,24682,0,0.0,"Remove rows missing time, latitude, longitude, depth, mag."
+Filter physical ranges,24682,24639,43,0.17,Enforce latitude/longitude/depth/magnitude bounds.
+Keep earthquake type,24639,24432,207,0.84,Filter to events labeled as earthquakes only.

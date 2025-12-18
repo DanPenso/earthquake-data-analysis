@@ -20,6 +20,7 @@
     "epicentre_map_section5_2.png"
   ],
   "tables_csv": [
+    "cleaning_audit.csv",
     "region_summary_section5_2.csv"
   ],
   "extra_folder_check": {

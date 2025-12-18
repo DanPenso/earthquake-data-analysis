@@ -1,15 +1,26 @@
 # Earthquake Data Analysis Report (2023 USGS Catalogue)
 
+## Table of Contents
+- [Executive Summary](#executive-summary)
+- [Data and Provenance](#data-and-provenance)
+- [Cleaning Pipeline](#cleaning-pipeline)
+- [Feature Engineering](#feature-engineering)
+- [Exploratory Findings (selected)](#exploratory-findings-selected)
+- [Strong-Quake Classifier](#strong-quake-classifier)
+- [Limitations and Risks](#limitations-and-risks)
+- [Recommended Next Steps](#recommended-next-steps)
+- [Reproducibility and Deliverables](#reproducibility-and-deliverables)
+
 ## Executive Summary
 - Source: USGS global earthquake catalogue for 2023 (26,642 raw rows). After cleaning, 24,432 earthquakes remain; 146 (0.6%) are strong events (magnitude >= 6.0).
 - Key patterns: epicentres cluster along plate boundaries (Pacific Ring of Fire, Andean margin, Indonesian arc); shallow events dominate, but intermediate and deep foci still host strong quakes; measurement quality is mostly high with a thin low-quality tail.
 - Modelling: a class-weighted logistic regression prioritises recall (precision 0.10, recall 0.93, PR-AUC 0.43). A compact random forest raises precision but lowers recall (precision 0.71, recall 0.17, PR-AUC 0.49). Threshold tuning and probability calibration are recommended.
-- Reproducibility: cleaning, feature engineering, and modelling live in `Earthquake Analysis.ipynb` backed by `earthquakelibs.py`. Inputs sit under `data/` (for example, `data/Earthquake Dataset.csv`), exports under `outputs/`, and environment details are logged in the notebook.
+- Reproducibility: cleaning, feature engineering, and modelling live in `Notebooks/01 Earthquake Analysis.ipynb` backed by `Notebooks/earthquakelibs.py`. Inputs sit under `Data/Raw/` (for example, `Data/Raw/Earthquake Dataset.csv`), exports under `Data/Processed/`, and environment details are logged in the notebook.
 
 ## Data and Provenance
 - Dataset: USGS Earthquake Hazards Program CSV export for all 2023 events.
 - Fields: timestamps, latitude/longitude, magnitude, depth, event type, and uncertainty metrics (`gap`, `rms`, `depthError`, `magError`, `horizontalError`, station counts).
-- Storage: raw files in `data/Earthquake Dataset.csv` with supporting assets (if any) in `data/`. Outputs are written to `outputs/` when export flags are enabled.
+- Storage: raw files in `Data/Raw/Earthquake Dataset.csv` with supporting assets (if any) in `Data/Raw/`. Outputs are written to `Data/Processed/` when export flags are enabled.
 
 ## Cleaning Pipeline
 - Goals: retain only physically plausible earthquakes with complete core fields; document every removal.
@@ -35,7 +46,7 @@
 ## Exploratory Findings (selected)
 - Depth distribution: right-skewed; median 22 km, 10th percentile 8.7 km, 90th percentile 162.7 km, 95th percentile 319.0 km, 99th percentile 580.0 km, max 681.2 km. Negative depths are rare (~0.16%).
 - Magnitude versus depth: weak linear coupling; high magnitudes occur across depth classes, so depth alone is not predictive.
-- Spatial patterns: epicentres align with major plate boundaries. Regional share table (from `outputs/region_summary_section8_2.csv`):
+- Spatial patterns: epicentres align with major plate boundaries. Regional share table (from `Data/Processed/Tables/region_summary_section5_2.csv`):
 
 | Region | Events | % Global | % Strong | Median Depth (km) |
 | --- | --- | --- | --- | --- |
@@ -47,7 +58,7 @@
 | unknown | 0 | 0.0 | 0.0 | 0.0 |
 
 - Quality and uncertainty: most events have high `quality_score`, but a thin tail shows high `gap`, `magError`, or `depthError`. Low-quality tails should be down-weighted or excluded in models sensitive to measurement error.
-- Visual assets: interactive globe and static PNG exported from Section 8.2 (`epicentre_map_section8_2.html` / `.png`) plus the regional summary CSV above.
+- Visual assets: interactive globe and static PNG exported from Section 5.2 (`Data/Processed/Maps/epicentre_map_section5_2.html` / `.png`) plus the regional summary CSV above.
 
 ## Strong-Quake Classifier
 - Goal: early-warning style flag for strong events (mag >= 6.0) using engineered features while handling severe class imbalance.
@@ -83,8 +94,8 @@
 5) Automate monthly ingestion plus artifact generation (maps, CSVs) with a short changelog of shifts in rates or metrics.  
 
 ## Reproducibility and Deliverables
-- Primary notebook: `Earthquake Analysis.ipynb` (contains cleaning, feature engineering, EDA, modelling, and export toggles).
-- Shared helpers: `earthquakelibs.py` (imports, availability flags, project paths).
-- Inputs: place the 2023 CSV in `data/`; the notebook auto-detects `data/` and `outputs/` via `earthquakelibs.py`.
-- Outputs (when export flags are enabled): `outputs/epicentre_map_section8_2.html`, `outputs/epicentre_map_section8_2.png`, `outputs/region_summary_section8_2.csv`, plus any additional figures or tables generated in notebook sections.
-- To publish a clean report from the notebook, render with code hidden (for example `jupyter nbconvert --to html --no-input Earthquake Analysis.ipynb`) or use Quarto/nbconvert with `exclude_input=True` so the focus stays on narrative and figures.
+- Primary notebook: `Notebooks/01 Earthquake Analysis.ipynb` (contains cleaning, feature engineering, EDA, modelling, and export toggles).
+- Shared helpers: `Notebooks/earthquakelibs.py` (imports, availability flags, project paths).
+- Inputs: place the 2023 CSV in `Data/Raw/`; the notebook uses `earthquakelibs.py` paths to resolve `Data/Raw/` and `Data/Processed/`.
+- Outputs (when export flags are enabled): `Data/Processed/Maps/epicentre_map_section5_2.html`, `Data/Processed/Maps/epicentre_map_section5_2.png`, `Data/Processed/Tables/region_summary_section5_2.csv`, plus any additional figures or tables generated in notebook sections.
+- To publish a clean report from the notebook, render with code hidden (for example `jupyter nbconvert --to html --no-input Notebooks/01\ Earthquake\ Analysis.ipynb`) or use Quarto/nbconvert with `exclude_input=True` so the focus stays on narrative and figures.
