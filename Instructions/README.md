@@ -12,7 +12,7 @@ Clean, single notebook earthquake data analysis for the 2023 USGS catalogue.
 
 - Hasini Adihetty: initial data exploration, cleaning narrative, and depth and magnitude EDA.
 - Dinis Nascimento: feature engineering design, regional/tectonic analysis, and strong quake modelling.
-- Daniel Penson: documentation updates and final QA.
+- Daniel Penson: documentation updates and final QA, univariate analysis, correlation and distribution visualisations.
 All reviewed the full notebook narrative and QA (hash logging, seeds, flowchart, and TOC) to ensure a consistent, submission-ready storyline.
 
 ## Project overview
