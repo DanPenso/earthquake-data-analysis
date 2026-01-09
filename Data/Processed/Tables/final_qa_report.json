@@ -34,26 +34,33 @@
   "captions": {
     "table_of_figures_present": true,
     "table_of_tables_present": true,
-    "figure_caption_count": 18,
-    "table_caption_count": 4,
+    "figure_caption_count": 17,
+    "table_caption_count": 2,
     "figure_numbering": {
-      "ok": true,
+      "ok": false,
       "start": 1,
       "end": 18,
-      "missing": [],
+      "missing": [
+        2
+      ],
       "dupes": [],
-      "count": 18
+      "count": 17
     },
     "table_numbering": {
       "ok": true,
-      "start": 1,
+      "start": 3,
       "end": 4,
       "missing": [],
       "dupes": [],
-      "count": 4
+      "count": 2
     },
-    "missing_figure_shows_for": [],
-    "missing_table_shows_for": []
+    "missing_figure_shows_for": [
+      1,
+      4
+    ],
+    "missing_table_shows_for": [
+      4
+    ]
   },
   "requirements": {
     "project_root_exists": true,
@@ -69,11 +76,11 @@
     "table_of_figures_present": true,
     "table_of_tables_present": true,
     "figure_captions_present": true,
-    "figure_numbering_continuous": true,
-    "each_figure_has_shows": true,
+    "figure_numbering_continuous": false,
+    "each_figure_has_shows": false,
     "table_captions_present": true,
     "table_numbering_continuous": true,
-    "each_table_has_shows": true
+    "each_table_has_shows": false
   },
-  "overall_pass": true
+  "overall_pass": false
 }
