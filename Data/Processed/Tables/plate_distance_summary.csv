@@ -1,0 +1,3 @@
+is_strong_quake,events,median_km,iqr_km,mean_km
+Not strong (Mw < 6.0),24286,1907.1,2044.7,2613.4
+Strong (Mw >= 6.0),146,2213.0,4159.4,3184.4

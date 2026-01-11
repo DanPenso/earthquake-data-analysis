@@ -83,6 +83,7 @@ try:
     from sklearn.linear_model import LogisticRegression
     from sklearn.tree import DecisionTreeClassifier
     from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+    from sklearn.neighbors import BallTree
     from sklearn.cluster import KMeans, DBSCAN
     from sklearn.decomposition import PCA
     from sklearn.metrics import (
@@ -105,6 +106,7 @@ except ImportError:
     train_test_split = OneHotEncoder = StandardScaler = ColumnTransformer = Pipeline = None
     SimpleImputer = None
     LogisticRegression = DecisionTreeClassifier = RandomForestClassifier = GradientBoostingClassifier = None
+    BallTree = None
     KMeans = DBSCAN = PCA = None
     accuracy_score = precision_score = recall_score = f1_score = confusion_matrix = classification_report = roc_auc_score = roc_curve = None
     precision_recall_curve = average_precision_score = auc = None
@@ -169,9 +171,56 @@ WORLD_MAP_FILE = IMAGES_DIR / "World Map.png"
 UNI_LOGO_FILE = IMAGES_DIR / "UniLogo.png"
 PLATE_FILE = RAW_DIR / "Plate Boundaries.csv"
 
-# Ensure expected directories exist for outputs and assets.
-for _p in (RAW_DIR, PROCESSED_DIR, FIGURES_DIR, MAPS_DIR, TABLES_DIR, IMAGES_DIR):
-    _p.mkdir(parents=True, exist_ok=True)
+def ensure_project_dirs(
+    *,
+    create_processed: bool = True,
+    create_tables: bool = True,
+    create_maps: bool = True,
+    create_figures: bool = True,
+    create_images: bool = True,
+    raise_on_error: bool = True,
+) -> dict[str, Path]:
+    """Create expected output directories (explicit call; no import-time side effects).
+
+    This function exists to keep `import earthquakelibs` safe in restricted
+    environments where the repository root may not be writable.
+
+    If directory creation fails and `raise_on_error` is False, warnings are
+    emitted and the notebook can still run until it attempts an export.
+    """
+
+    targets: list[Path] = []
+    if create_processed:
+        targets.append(PROCESSED_DIR)
+    if create_figures:
+        targets.append(FIGURES_DIR)
+    if create_maps:
+        targets.append(MAPS_DIR)
+    if create_tables:
+        targets.append(TABLES_DIR)
+    if create_images:
+        targets.append(IMAGES_DIR)
+
+    for path in targets:
+        try:
+            path.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            msg = (
+                f"Could not create directory: {path}. "
+                "If the repo is not writable, set EARTHQUAKE_OUTPUT_DIR to a writable folder "
+                "and rerun the notebook."
+            )
+            if raise_on_error:
+                raise OSError(msg) from exc
+            warnings.warn(msg)
+
+    return {
+        "PROCESSED_DIR": PROCESSED_DIR,
+        "FIGURES_DIR": FIGURES_DIR,
+        "MAPS_DIR": MAPS_DIR,
+        "TABLES_DIR": TABLES_DIR,
+        "IMAGES_DIR": IMAGES_DIR,
+    }
 
 # Backward-compatible alias for older notebook variables.
 OUTPUTS_DIR = PROCESSED_DIR
@@ -210,6 +259,7 @@ for name, value in {
     "DecisionTreeClassifier": DecisionTreeClassifier,
     "RandomForestClassifier": RandomForestClassifier,
     "GradientBoostingClassifier": GradientBoostingClassifier,
+    "BallTree": BallTree,
     "KMeans": KMeans,
     "DBSCAN": DBSCAN,
     "PCA": PCA,
@@ -302,6 +352,71 @@ def plot_scatter_geo(df, lat_col="latitude", lon_col="longitude", color_col=None
     return fig
 
 
+def add_plate_distance(
+    df: pd.DataFrame,
+    plate_file: Path | None = PLATE_FILE,
+    *,
+    lat_col: str = "latitude",
+    lon_col: str = "longitude",
+    out_col: str = "dist_to_plate_km",
+    earth_radius_km: float = 6371.0088,
+) -> pd.DataFrame:
+    """Add great-circle distance to nearest plate-boundary point (km).
+
+    This is a simple, custom feature: treat the plate-boundary CSV as a cloud
+    of boundary points and compute the nearest-neighbour distance from each
+    earthquake epicentre using haversine geometry.
+
+    Returns a copy with `out_col` added. If inputs/dependencies are missing,
+    the column is created with NaNs so downstream code remains stable.
+    """
+    out = df.copy()
+    out[out_col] = np.nan
+
+    if not HAS_SKLEARN or BallTree is None:
+        return out
+
+    if plate_file is None:
+        return out
+
+    plate_path = Path(plate_file)
+    if not plate_path.exists():
+        return out
+
+    plates = pd.read_csv(plate_path)
+    plate_lon_col = "lon" if "lon" in plates.columns else None
+    plate_lat_col = "lat" if "lat" in plates.columns else None
+    if plate_lon_col is None or plate_lat_col is None:
+        if plates.shape[1] >= 2:
+            plate_lon_col, plate_lat_col = plates.columns[:2].tolist()
+        else:
+            return out
+
+    boundary = plates[[plate_lat_col, plate_lon_col]].dropna()
+    if boundary.empty:
+        return out
+
+    boundary_rad = np.deg2rad(boundary[[plate_lat_col, plate_lon_col]].to_numpy(dtype=float))
+    tree = BallTree(boundary_rad, metric="haversine")
+
+    if lat_col not in out.columns or lon_col not in out.columns:
+        return out
+
+    q = out[[lat_col, lon_col]].to_numpy(dtype=float, copy=True)
+    mask = np.isfinite(q).all(axis=1)
+    if not mask.any():
+        return out
+
+    q_rad = np.deg2rad(q[mask])
+    dist_rad, _ = tree.query(q_rad, k=1)
+    out.loc[mask, out_col] = dist_rad[:, 0] * earth_radius_km
+    return out
+
+
+# Expose the custom feature helper via `libs` (defined earlier in the file).
+setattr(libs, "add_plate_distance", add_plate_distance)
+
+
 class EarthquakePipeline:
     """Lightweight orchestrator to run the notebook steps with shared paths."""
 
@@ -312,6 +427,8 @@ class EarthquakePipeline:
         figures_dir: Path = FIGURES_DIR,
         maps_dir: Path = MAPS_DIR,
         tables_dir: Path = TABLES_DIR,
+        *,
+        auto_create_dirs: bool = False,
         clean_fn=None,
         engineer_fn=None,
         train_fn=None,
@@ -322,8 +439,8 @@ class EarthquakePipeline:
         self.figures_dir = Path(figures_dir)
         self.maps_dir = Path(maps_dir)
         self.tables_dir = Path(tables_dir)
-        for path in (self.outputs_dir, self.figures_dir, self.maps_dir, self.tables_dir):
-            path.mkdir(parents=True, exist_ok=True)
+        if auto_create_dirs:
+            self.ensure_dirs()
         self.clean_fn = clean_fn
         self.engineer_fn = engineer_fn
         self.train_fn = train_fn
@@ -333,9 +450,18 @@ class EarthquakePipeline:
         self.feat_df = None
         self.audit_df = None
 
+    def ensure_dirs(self) -> None:
+        """Create pipeline output directories.
+
+        Called explicitly from the notebook to avoid filesystem side effects
+        during module import.
+        """
+        for path in (self.outputs_dir, self.figures_dir, self.maps_dir, self.tables_dir):
+            path.mkdir(parents=True, exist_ok=True)
+
     def load(self) -> pd.DataFrame:
         """Load the raw catalogue from disk."""
-        df = pd.read_csv(self.data_file, parse_dates=["time", "updated"], infer_datetime_format=True)
+        df = pd.read_csv(self.data_file, parse_dates=["time", "updated"])
         self.raw_df = df
         return df
 
@@ -368,6 +494,7 @@ class EarthquakePipeline:
         df = cleaned_df if cleaned_df is not None else self.clean_df
         if df is None:
             raise ValueError("No cleaned dataframe available to save.")
+        self.outputs_dir.mkdir(parents=True, exist_ok=True)
         out_path = self.outputs_dir / filename
         df.to_csv(out_path, index=False)
         return out_path
@@ -392,6 +519,7 @@ __all__ = [
     "availability",
     "fmt_pm",
     "EarthquakePipeline",
+    "ensure_project_dirs",
     "PROJECT_ROOT",
     "INSTRUCTIONS_DIR",
     "NOTEBOOKS_DIR",
@@ -409,6 +537,7 @@ __all__ = [
     "OUTPUTS_DIR",
     "plot_hist_with_stats",
     "plot_scatter_geo",
+    "add_plate_distance",
 ]
 
 
