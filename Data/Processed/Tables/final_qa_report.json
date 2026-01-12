@@ -14,14 +14,14 @@
   ],
   "figures_png": [],
   "maps_html": [
-    "epicentre map section5 2.html"
+    "epicentre_map_section5_2.html"
   ],
   "maps_png": [
-    "epicentre map section5 2.png"
+    "epicentre_map_section5_2.png"
   ],
   "tables_csv": [
-    "cleaning audit.csv",
-    "region summary section5 2.csv"
+    "cleaning_audit.csv",
+    "region_summary_section5_2.csv"
   ],
   "extra_folder_check": {
     "exists": false,

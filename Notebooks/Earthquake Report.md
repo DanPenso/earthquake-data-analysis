@@ -46,7 +46,7 @@
 ## Exploratory Findings (selected)
 - Depth distribution: right-skewed; median 22 km, 10th percentile 8.7 km, 90th percentile 162.7 km, 95th percentile 319.0 km, 99th percentile 580.0 km, max 681.2 km. Negative depths are rare (~0.16%).
 - Magnitude versus depth: weak linear coupling; high magnitudes occur across depth classes, so depth alone is not predictive.
-- Spatial patterns: epicentres align with major plate boundaries. Regional share table (from `Data/Processed/Tables/region summary section5 2.csv`):
+- Spatial patterns: epicentres align with major plate boundaries. Regional share table (from `Data/Processed/Tables/region_summary_section5_2.csv`):
 
 | Region | Events | % Global | % Strong | Median Depth (km) |
 | --- | --- | --- | --- | --- |
@@ -58,7 +58,7 @@
 | unknown | 0 | 0.0 | 0.0 | 0.0 |
 
 - Quality and uncertainty: most events have high `quality_score`, but a thin tail shows high `gap`, `magError`, or `depthError`. Low-quality tails should be down-weighted or excluded in models sensitive to measurement error.
-- Visual assets: interactive globe and static PNG exported from Section 5.2 (`Data/Processed/Maps/epicentre map section5 2.html` / `.png`) plus the regional summary CSV above.
+- Visual assets: interactive globe and static PNG exported from Section 5.2 (`Data/Processed/Maps/epicentre_map_section5_2.html` / `.png`) plus the regional summary CSV above.
 
 ## Strong-Quake Classifier
 - Goal: early-warning style flag for strong events (mag >= 6.0) using engineered features while handling severe class imbalance.
@@ -100,5 +100,5 @@
 - Primary notebook: `Notebooks/01 Earthquake Analysis.ipynb` (contains cleaning, feature engineering, EDA, modelling, and export toggles).
 - Shared helpers: `Notebooks/earthquakelibs.py` (imports, availability flags, project paths).
 - Inputs: place the 2023 CSV in `Data/Raw/`; the notebook uses `earthquakelibs.py` paths to resolve `Data/Raw/` and `Data/Processed/`.
-- Outputs (when export flags are enabled): `Data/Processed/Maps/epicentre map section5 2.html`, `Data/Processed/Maps/epicentre map section5 2.png`, `Data/Processed/Tables/region summary section5 2.csv`, plus any additional figures or tables generated in notebook sections.
+- Outputs (when export flags are enabled): `Data/Processed/Maps/epicentre_map_section5_2.html`, `Data/Processed/Maps/epicentre_map_section5_2.png`, `Data/Processed/Tables/region_summary_section5_2.csv`, plus any additional figures or tables generated in notebook sections.
 - To publish a clean report from the notebook, render with code hidden (for example `jupyter nbconvert --to html --no-input Notebooks/01\ Earthquake\ Analysis.ipynb`) or use Quarto/nbconvert with `exclude_input=True` so the focus stays on narrative and figures.
