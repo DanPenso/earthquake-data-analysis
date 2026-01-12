@@ -19,7 +19,7 @@
 
 ## Data and Provenance
 - Dataset: USGS Earthquake Hazards Program CSV export for all 2023 events.
-- Fields: timestamps, latitude/longitude, magnitude (`mag`) with scale indicated by `magType` (e.g., Mw/mb/ml), depth, event type, and uncertainty metrics (`gap`, `rms`, `depthError`, `magError`, `horizontalError`, station counts).
+- Fields: timestamps, latitude/longitude, magnitude, depth, event type, and uncertainty metrics (`gap`, `rms`, `depthError`, `magError`, `horizontalError`, station counts).
 - Storage: raw files in `Data/Raw/Earthquake Dataset.csv` with supporting assets (if any) in `Data/Raw/`. Outputs are written to `Data/Processed/` when export flags are enabled.
 
 ## Cleaning Pipeline
@@ -61,7 +61,7 @@
 - Visual assets: interactive globe and static PNG exported from Section 5.2 (`Data/Processed/Maps/epicentre map section5 2.html` / `.png`) plus the regional summary CSV above.
 
 ## Strong-Quake Classifier
-- Goal: post-event catalogue flagging for strong events (mag >= 6.0) using engineered features while handling severe class imbalance.
+- Goal: early-warning style flag for strong events (mag >= 6.0) using engineered features while handling severe class imbalance.
 - Setup: stratified train/test split; preprocessing shared across models; features include physical (depth, latitude, longitude), context (`broad_region`, hemispheres, time-of-day), and quality metrics.
 - Models evaluated:
   - `LogReg` (class-weighted logistic regression baseline).
