@@ -147,7 +147,7 @@ def availability() -> dict:
 
 
 def fmt_pm(mean: float, sd: float, decimals: int = 3) -> str:
-    """Format a mean +/- standard deviation string with a fixed precision."""
+    """Format a mean ± standard deviation string with a fixed precision."""
     return f"{mean:.{decimals}f} \u00B1 {sd:.{decimals}f}"
 
 
