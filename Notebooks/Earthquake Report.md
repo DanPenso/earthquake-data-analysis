@@ -16,7 +16,7 @@
 
 - Source: USGS global earthquake catalogue for 2023 (26,642 raw rows). After cleaning, 24,432 earthquakes remain; 146 (0.6%) are strong events (magnitude >= 6.0).
 - Key patterns: epicentres cluster along plate boundaries (Pacific Ring of Fire, Andean margin, Indonesian arc); shallow events dominate, but intermediate and deep foci still host strong quakes; measurement quality is mostly high with a thin low-quality tail.
-- Modelling: a class-weighted logistic regression prioritises recall (precision 0.10, recall 0.93, PR-AUC 0.43). A compact random forest raises precision but lowers recall (precision 0.71, recall 0.17, PR-AUC 0.49). Threshold tuning and probability calibration are recommended.
+- Modelling: baseline Logistic Regression, Random Forest, and XGBoost classifiers use non-leaking predictors. Cross-validation average precision peaks at ~0.035 (XGBoost); on the hold-out set, the XGBoost baseline reaches precision ~0.02, recall ~0.62, and accuracy ~0.84 at a 0.5 threshold. Precision remains low because strong events are rare; outputs are treated as baselines that require threshold tuning and calibration.
 - Reproducibility: cleaning, feature engineering, and modelling live in `Notebooks/01 Earthquake Analysis.ipynb` backed by `Notebooks/earthquakelibs.py`. Inputs sit under `Data/Raw/` (for example, `Data/Raw/Earthquake Dataset.csv`), exports under `Data/Processed/`, and environment details are logged in the notebook.
 
 ## Data and Provenance
@@ -71,24 +71,15 @@
 ## Strong-Quake Classifier
 
 - Goal: early-warning style flag for strong events (mag >= 6.0) using engineered features while handling severe class imbalance.
-- Setup: stratified train/test split; preprocessing shared across models; features include physical (depth, latitude, longitude), context (`broad_region`, hemispheres, time-of-day), and quality metrics.
-- Models evaluated:
-
-  - `LogReg` (class-weighted logistic regression baseline).
-  - `Forest` (compact random forest).
-- Metrics (hold-out set):
-
-| Model | Accuracy | Precision (pos) | Recall (pos) | F1 (pos) | ROC AUC | PR AUC | Avg Precision | CV F1 mean |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| LogReg | 0.948 | 0.097 | 0.931 | 0.176 | 0.986 | 0.427 | 0.436 | 0.172 (std 0.012) |
-| Forest | 0.995 | 0.714 | 0.172 | 0.278 | 0.971 | 0.493 | 0.504 | n/a |
-
+- Setup: stratified train/test split; preprocessing shared across models; predictors include physical (depth, latitude, longitude), contextual (`broad_region`, hemispheres, time-of-day), and quality metrics while excluding magnitude-derived or target-defining fields to avoid leakage.
+- Models evaluated: class-weighted Logistic Regression, compact Random Forest, and XGBoost baselines.
+- Metrics:
+  - Cross-validation (average precision): up to ~0.035 (XGBoost), ~0.030 (Logistic Regression), and ~0.023–0.030 (Random Forest).
+  - Hold-out (best XGBoost configuration, threshold 0.5): precision ~0.02, recall ~0.62, F1 ~0.04, accuracy ~0.84; AP bootstrap 95% CI 0.020–0.069 and recall CI 0.454–0.815.
+  - Regional diagnostics show uneven performance driven by imbalance (e.g., recall 0.75 in Asia_WestPacific vs. 0.00 in Europe_Africa at the default threshold).
 - Interpretation:
-
-  - LogReg favours recall, suitable for high-sensitivity alerting but produces many false alarms (low precision).
-  - Forest increases precision but misses more strong events (low recall). Threshold tuning is required before deployment.
-  - PR-AUC is the preferred metric given the 0.6% positive rate; ROC-AUC alone overstates performance.
-  - Feature importances highlight depth, latitude, and quality terms; consider adding plate-boundary distance to improve spatial signal.
+  - Models recover many strong events but at the cost of false alarms; precision remains limited by rarity and overlapping feature space.
+  - Threshold tuning, calibration, and richer tectonic features are needed before operational use.
 
 ## Limitations and Risks
 
@@ -112,4 +103,4 @@
 - Shared helpers: `Notebooks/earthquakelibs.py` (imports, availability flags, project paths).
 - Inputs: place the 2023 CSV in `Data/Raw/`; the notebook uses `earthquakelibs.py` paths to resolve `Data/Raw/` and `Data/Processed/`.
 - Outputs (when export flags are enabled): `Data/Processed/Maps/epicentre_map_section5_2.html`, `Data/Processed/Maps/epicentre_map_section5_2.png`, `Data/Processed/Tables/region_summary_section5_2.csv`, plus any additional figures or tables generated in notebook sections.
-- To publish a clean report from the notebook, render with code hidden (for example `jupyter nbconvert --to html --no-input Notebooks/01\ Earthquake\ Analysis.ipynb`) or use Quarto/nbconvert with `exclude_input=True` so the focus stays on narrative and figures.
+- To publish a clean report from the notebook, render with code hidden (for example `jupyter nbconvert --to html --no-input Notebooks/01\\ Earthquake\\ Analysis.ipynb`) or use Quarto/nbconvert with `exclude_input=True` so the focus stays on narrative and figures.
