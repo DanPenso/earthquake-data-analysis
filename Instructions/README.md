@@ -47,7 +47,7 @@ conda activate earthquake
 python -m pip install -r Instructions/Requirements.txt
 ```
 
-2. Open the notebook and run all cells:
+1. Open the notebook and run all cells:
 
 ```powershell
 cd Notebooks
